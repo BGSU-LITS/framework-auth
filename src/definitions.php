@@ -106,7 +106,7 @@ return function (Framework $framework): void {
             [
                 'httponly' => true,
                 'path' => '/',
-                'samesite' => 'Strict',
+                'samesite' => 'Lax',
                 'secure' => true,
             ]
         )
