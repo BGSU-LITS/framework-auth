@@ -14,7 +14,7 @@
         "ext-filter": "*",
         "ext-hash": "*",
         "ext-ldap": "*",
-        "bgsu-lits/framework": "^1.7.0",
+        "bgsu-lits/framework": "^1.8.0",
         "bgsu-lits/framework-database": "^1.0.0",
         "jasny/auth": "^2.2",
         "latitude/latitude": "^4.2",
