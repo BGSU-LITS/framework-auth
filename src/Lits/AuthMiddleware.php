@@ -58,6 +58,14 @@ final class AuthMiddleware extends JasnyAuthMiddleware
             throw new HttpForbiddenException($request);
         }
 
+        return $this->redirect($request, $response);
+    }
+
+    /** @throws HttpUnauthorizedException */
+    private function redirect(
+        ServerRequest $request,
+        ?Response $response
+    ): Response {
         if (
             $this->config instanceof AuthConfig &&
             !\is_null($this->config->url) &&

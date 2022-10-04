@@ -20,21 +20,27 @@ final class RouteAuthRequired implements AuthRequired
         $this->settings = $settings;
     }
 
-    /** @return string|bool|null */
-    public function __invoke(ServerRequest $request)
+    private function requiredFromRequest(ServerRequest $request): ?string
     {
         \assert($this->settings['auth'] instanceof AuthConfig);
 
-        $required = $this->settings['auth']->required;
         $route = RouteContext::fromRequest($request)->getRoute();
 
         if ($route instanceof Route) {
             $argument = $route->getArgument('auth');
 
             if (\is_string($argument)) {
-                $required = $argument;
+                return $argument;
             }
         }
+
+        return $this->settings['auth']->required;
+    }
+
+    /** @return string|bool|null */
+    public function __invoke(ServerRequest $request)
+    {
+        $required = $this->requiredFromRequest($request);
 
         if (!\is_string($required)) {
             return null;

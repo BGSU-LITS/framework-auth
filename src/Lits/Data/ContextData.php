@@ -41,20 +41,18 @@ final class ContextData extends DatabaseData implements ContextInterface
         }
 
         $context = new static(\trim($row['context']), $settings, $database);
-
-        if (isset($row['user_id'])) {
-            $context->user_id = (int) $row['user_id'];
-        }
-
-        if (isset($row['role_id'])) {
-            $context->role_id = \trim($row['role_id']);
-        }
+        $context->user_id = self::findRowInt($row, 'user_id');
+        $context->setRoleIdFromRow($row);
 
         return $context;
     }
 
     public function findRoleId(int $user_id): void
     {
+        if ($this->user_id === $user_id) {
+            return;
+        }
+
         $this->user_id = $user_id;
         $this->role_id = null;
 
@@ -69,13 +67,23 @@ final class ContextData extends DatabaseData implements ContextInterface
         /** @var array<string, string|null>|null $row */
         $row = $statement->fetch(\PDO::FETCH_ASSOC);
 
-        if (\is_array($row) && isset($row['role_id'])) {
-            $this->role_id = \trim($row['role_id']);
+        if (\is_array($row)) {
+            $this->setRoleIdFromRow($row);
         }
     }
 
     public function getAuthId(): ?string
     {
         return null;
+    }
+
+    /** @param array<string, string|null> $row */
+    public function setRoleIdFromRow(array $row): void
+    {
+        $this->role_id = self::findRowString($row, 'role_id');
+
+        if ($this->role_id === '') {
+            $this->role_id = null;
+        }
     }
 }
