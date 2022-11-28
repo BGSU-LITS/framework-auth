@@ -8,6 +8,7 @@ use Lits\Data\UserData;
 use Lits\Framework;
 use Safe\DateTimeImmutable;
 
+// phpcs:ignore SlevomatCodingStandard.Complexity.Cognitive
 return function (Framework $framework): void {
     $framework->dispatcher()->addListener(
         Login::class,

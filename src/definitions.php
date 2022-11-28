@@ -26,6 +26,7 @@ use Psr\Http\Message\ResponseFactoryInterface as ResponseFactory;
 use Psr\Http\Message\ServerRequestInterface as ServerRequest;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface as Dispatcher;
 
+// phpcs:ignore SlevomatCodingStandard.Complexity.Cognitive
 return function (Framework $framework): void {
     $framework->addDefinition(
         Auth::class,
