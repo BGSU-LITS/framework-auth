@@ -32,7 +32,7 @@ return function (Framework $framework): void {
         Auth::class,
         DI\autowire()
             ->constructorParameter('confirmation', DI\get(Confirmation::class))
-            ->method('withEventDispatcher', DI\get(Dispatcher::class))
+            ->property('dispatcher', DI\get(Dispatcher::class))
     );
 
     $framework->addDefinition(
