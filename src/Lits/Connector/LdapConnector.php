@@ -53,7 +53,13 @@ final class LdapConnector
 
         $this->settings['ldap']->testDomain();
 
-        [$username, $domain] = \explode('@', $username, 2);
+        $parts = \explode('@', $username, 2);
+
+        if (\count($parts) !== 2) {
+            throw new InvalidDataException('Invalid email address');
+        }
+
+        [$username, $domain] = $parts;
 
         if ($domain !== $this->settings['ldap']->domain) {
             return false;
