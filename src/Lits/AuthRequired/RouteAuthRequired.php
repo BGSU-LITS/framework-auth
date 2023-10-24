@@ -42,7 +42,7 @@ final class RouteAuthRequired implements AuthRequired
     {
         $required = $this->requiredFromRequest($request);
 
-        if (!\is_string($required)) {
+        if (!\is_string($required) || $required === 'null') {
             return null;
         }
 
