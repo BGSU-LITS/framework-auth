@@ -8,7 +8,7 @@ use Phoenix\Database\Element\ForeignKey;
 use Phoenix\Exception\InvalidArgumentValueException;
 use Phoenix\Migration\AbstractMigration;
 
-class CreateContextTable extends AbstractMigration
+final class CreateContextTable extends AbstractMigration
 {
     /** @throws InvalidArgumentValueException */
     protected function up(): void

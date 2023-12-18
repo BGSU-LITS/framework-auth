@@ -21,13 +21,13 @@ final class LdapConfig extends Config
     {
         if ($this->domain === '') {
             throw new InvalidConfigException(
-                'The LDAP domain must be specified'
+                'The LDAP domain must be specified',
             );
         }
 
         if (!self::validateHostname($this->domain)) {
             throw new InvalidConfigException(
-                'The LDAP domain must be valid'
+                'The LDAP domain must be valid',
             );
         }
     }
@@ -37,13 +37,13 @@ final class LdapConfig extends Config
     {
         if ($this->host === '') {
             throw new InvalidConfigException(
-                'The LDAP host must be specified'
+                'The LDAP host must be specified',
             );
         }
 
         if (!self::validateHostname($this->host)) {
             throw new InvalidConfigException(
-                'The LDAP host must be valid'
+                'The LDAP host must be valid',
             );
         }
     }
@@ -53,13 +53,13 @@ final class LdapConfig extends Config
     {
         if ($this->bind === '') {
             throw new InvalidConfigException(
-                'The LDAP bind must be specified'
+                'The LDAP bind must be specified',
             );
         }
 
         if (\strpos($this->bind, '%s') === false) {
             throw new InvalidConfigException(
-                'The LDAP bind must have a placeholder'
+                'The LDAP bind must have a placeholder',
             );
         }
     }
@@ -69,7 +69,7 @@ final class LdapConfig extends Config
         return (bool) \filter_var(
             $hostname,
             \FILTER_VALIDATE_DOMAIN,
-            \FILTER_FLAG_HOSTNAME
+            \FILTER_FLAG_HOSTNAME,
         );
     }
 }

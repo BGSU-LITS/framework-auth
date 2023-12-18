@@ -52,7 +52,7 @@ final class AuthMiddleware extends JasnyAuthMiddleware
      */
     protected function forbidden(
         ServerRequest $request,
-        ?Response $response = null
+        ?Response $response = null,
     ): Response {
         if ($this->auth->isLoggedIn()) {
             throw new HttpForbiddenException($request);
@@ -64,7 +64,7 @@ final class AuthMiddleware extends JasnyAuthMiddleware
     /** @throws HttpUnauthorizedException */
     private function redirect(
         ServerRequest $request,
-        ?Response $response
+        ?Response $response,
     ): Response {
         if (
             $this->config instanceof AuthConfig &&
@@ -80,14 +80,14 @@ final class AuthMiddleware extends JasnyAuthMiddleware
                         (string) $request->getUri()
                             ->withScheme('')
                             ->withHost('')
-                            ->withPort(null)
-                    )
+                            ->withPort(null),
+                    ),
                 );
             } catch (\InvalidArgumentException $exception) {
                 throw new HttpUnauthorizedException(
                     $request,
                     null,
-                    $exception
+                    $exception,
                 );
             }
         }

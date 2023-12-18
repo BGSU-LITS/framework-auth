@@ -36,7 +36,7 @@ final class AuthData extends DatabaseData implements Storage, TokenStorage
             $subject,
             $token,
             $this->settings,
-            $this->database
+            $this->database,
         );
 
         if (\is_null($token)) {
@@ -55,7 +55,7 @@ final class AuthData extends DatabaseData implements Storage, TokenStorage
         return UserData::fromId(
             (int) $id,
             $this->settings,
-            $this->database
+            $this->database,
         );
     }
 
@@ -68,7 +68,7 @@ final class AuthData extends DatabaseData implements Storage, TokenStorage
         return UserData::fromUsername(
             $username,
             $this->settings,
-            $this->database
+            $this->database,
         );
     }
 
@@ -80,7 +80,7 @@ final class AuthData extends DatabaseData implements Storage, TokenStorage
         string $subject,
         string $token,
         User $user,
-        DateTime $expire
+        DateTime $expire,
     ): void {
         $token = new TokenData(
             (int) $user->getAuthId(),
@@ -88,7 +88,7 @@ final class AuthData extends DatabaseData implements Storage, TokenStorage
             $token,
             $expire,
             $this->settings,
-            $this->database
+            $this->database,
         );
 
         $token->save();

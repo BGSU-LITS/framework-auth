@@ -8,6 +8,5 @@ use Psr\Http\Message\ServerRequestInterface as ServerRequest;
 
 interface AuthRequired
 {
-    /** @return string|bool|null */
-    public function __invoke(ServerRequest $request);
+    public function __invoke(ServerRequest $request): string|bool|null;
 }

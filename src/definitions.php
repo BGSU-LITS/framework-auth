@@ -26,13 +26,17 @@ use Psr\Http\Message\ResponseFactoryInterface as ResponseFactory;
 use Psr\Http\Message\ServerRequestInterface as ServerRequest;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface as Dispatcher;
 
+use function DI\autowire;
+use function DI\create;
+use function DI\get;
+
 // phpcs:ignore SlevomatCodingStandard.Complexity.Cognitive
 return function (Framework $framework): void {
     $framework->addDefinition(
         Auth::class,
-        DI\autowire()
-            ->constructorParameter('confirmation', DI\get(Confirmation::class))
-            ->property('dispatcher', DI\get(Dispatcher::class))
+        autowire()
+            ->constructorParameter('confirmation', get(Confirmation::class))
+            ->property('dispatcher', get(Dispatcher::class)),
     );
 
     $framework->addDefinition(
@@ -43,7 +47,7 @@ return function (Framework $framework): void {
             AuthRequired $required,
             ResponseFactory $factory,
             ?Context $context,
-            Jwt $jwt
+            Jwt $jwt,
         ): AuthMiddleware {
             assert($settings['auth'] instanceof AuthConfig);
 
@@ -55,36 +59,36 @@ return function (Framework $framework): void {
                 ->withContext($context)
                 ->withSession(
                     function (ServerRequest $request) use ($jwt, $ttl): Jwt {
-                        /** @var Cookie|null $cookie */
                         $cookie = $request->getAttribute('jwt_cookie');
+                        assert($cookie instanceof Cookie || $cookie === null);
 
                         if ($cookie instanceof Cookie) {
                             $jwt = $jwt->withCookie($cookie);
                         }
 
                         return $jwt->withTtl($ttl);
-                    }
+                    },
                 );
         },
     );
 
     $framework->addDefinition(
         AuthRequired::class,
-        DI\get(RouteAuthRequired::class)
+        get(RouteAuthRequired::class),
     );
 
     $framework->addDefinition(
         Authz::class,
-        DI\create(Groups::class)->constructor([
+        create(Groups::class)->constructor([
             'user' => [],
             'admin' => ['user'],
             'super' => ['admin'],
-        ])
+        ]),
     );
 
     $framework->addDefinition(
         Confirmation::class,
-        DI\get(TokenConfirmation::class)
+        get(TokenConfirmation::class),
     );
 
     $framework->addDefinition(
@@ -97,27 +101,27 @@ return function (Framework $framework): void {
             }
 
             return null;
-        }
+        },
     );
 
     $framework->addDefinition(
         CookieMiddleware::class,
-        DI\create()->constructor(
+        create()->constructor(
             '__Host-lits-auth',
             [
                 'httponly' => true,
                 'path' => '/',
                 'samesite' => 'Lax',
                 'secure' => true,
-            ]
-        )
+            ],
+        ),
     );
 
     $framework->addDefinition(
         HttpsMiddleware::class,
-        DI\create()
-            ->constructor(DI\get(ResponseFactory::class))
-            ->method('maxAge', 0)
+        create()
+            ->constructor(get(ResponseFactory::class))
+            ->method('maxAge', 0),
     );
 
     $framework->addDefinition(
@@ -128,7 +132,7 @@ return function (Framework $framework): void {
             if ($settings['auth']->database instanceof DatabaseConfig) {
                 return new AuthData(
                     $settings,
-                    new Database($settings['auth']->database)
+                    new Database($settings['auth']->database),
                 );
             }
 
@@ -136,8 +140,8 @@ return function (Framework $framework): void {
 
             return new AuthData(
                 $settings,
-                new Database($settings['database'])
+                new Database($settings['database']),
             );
-        }
+        },
     );
 };

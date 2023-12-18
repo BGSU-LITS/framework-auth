@@ -13,18 +13,15 @@ use function Latitude\QueryBuilder\field;
 
 final class ContextData extends DatabaseData implements ContextInterface
 {
-    public string $context;
     public ?int $user_id = null;
     public ?string $role_id = null;
 
     public function __construct(
-        string $context,
+        public string $context,
         Settings $settings,
-        Database $database
+        Database $database,
     ) {
         parent::__construct($settings, $database);
-
-        $this->context = $context;
     }
 
     /**
@@ -34,7 +31,7 @@ final class ContextData extends DatabaseData implements ContextInterface
     public static function fromRow(
         array $row,
         Settings $settings,
-        Database $database
+        Database $database,
     ): self {
         if (!isset($row['context'])) {
             throw new InvalidDataException('The context must be specified');
@@ -61,7 +58,7 @@ final class ContextData extends DatabaseData implements ContextInterface
                 ->select()
                 ->from($this->database->prefix . 'context')
                 ->where(field('user_id')->eq($this->user_id))
-                ->andWhere(field('context')->eq($this->context))
+                ->andWhere(field('context')->eq($this->context)),
         );
 
         /** @var array<string, string|null>|null $row */

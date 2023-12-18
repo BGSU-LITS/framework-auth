@@ -25,7 +25,7 @@ return function (Framework $framework): void {
 
             $user->expires = new DateTimeImmutable('tomorrow');
             $user->save();
-        }
+        },
     );
 
     $framework->dispatcher()->addListener(
@@ -39,6 +39,6 @@ return function (Framework $framework): void {
 
             $user->expires = null;
             $user->save();
-        }
+        },
     );
 };

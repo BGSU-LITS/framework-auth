@@ -7,7 +7,7 @@ namespace Migration;
 use Phoenix\Exception\InvalidArgumentValueException;
 use Phoenix\Migration\AbstractMigration;
 
-class CreateRoleTable extends AbstractMigration
+final class CreateRoleTable extends AbstractMigration
 {
     /** @throws InvalidArgumentValueException */
     protected function up(): void

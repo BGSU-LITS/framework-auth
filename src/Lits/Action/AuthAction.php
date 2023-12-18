@@ -32,20 +32,20 @@ abstract class AuthAction extends Action
     protected function setup(
         ServerRequest $request,
         Response $response,
-        array $data
+        array $data,
     ): void {
         parent::setup($request, $response, $data);
 
         try {
             $this->response = $this->response->withHeader(
                 'Cache-Control',
-                'no-store'
+                'no-store',
             );
         } catch (InvalidArgumentException $exception) {
             throw new HttpInternalServerErrorException(
                 $this->request,
                 null,
-                $exception
+                $exception,
             );
         }
     }

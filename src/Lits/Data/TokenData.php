@@ -16,25 +16,15 @@ use function Latitude\QueryBuilder\field;
 
 final class TokenData extends DatabaseData
 {
-    public int $user_id;
-    public string $subject;
-    public string $token;
-    public DateTime $expires;
-
     public function __construct(
-        int $user_id,
-        string $subject,
-        string $token,
-        DateTime $expires,
+        public int $user_id,
+        public string $subject,
+        public string $token,
+        public DateTime $expires,
         Settings $settings,
-        Database $database
+        Database $database,
     ) {
         parent::__construct($settings, $database);
-
-        $this->user_id = $user_id;
-        $this->subject = $subject;
-        $this->token = $token;
-        $this->expires = $expires;
     }
 
     /**
@@ -44,7 +34,7 @@ final class TokenData extends DatabaseData
     public static function fromRow(
         array $row,
         Settings $settings,
-        Database $database
+        Database $database,
     ): self {
         if (!isset($row['user_id'])) {
             throw new InvalidDataException('The user_id must be specified');
@@ -60,7 +50,7 @@ final class TokenData extends DatabaseData
 
         if (!isset($row['expires'])) {
             throw new InvalidDataException(
-                'The datetime expires must be specified'
+                'The datetime expires must be specified',
             );
         }
 
@@ -70,7 +60,7 @@ final class TokenData extends DatabaseData
             throw new InvalidDataException(
                 'The datetime expires could not be parsed',
                 0,
-                $exception
+                $exception,
             );
         }
 
@@ -80,7 +70,7 @@ final class TokenData extends DatabaseData
             \trim($row['token']),
             $expires,
             $settings,
-            $database
+            $database,
         );
     }
 
@@ -89,14 +79,14 @@ final class TokenData extends DatabaseData
         string $subject,
         string $token,
         Settings $settings,
-        Database $database
+        Database $database,
     ): ?self {
         $statement = $database->execute(
             $database->query
                 ->select()
                 ->from($database->prefix . 'token')
                 ->where(field('subject')->eq($subject))
-                ->andWhere(field('token')->eq($token))
+                ->andWhere(field('token')->eq($token)),
         );
 
         /** @var array<string, string|null>|null $row */

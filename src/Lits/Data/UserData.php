@@ -14,16 +14,13 @@ use Lits\Exception\InvalidConfigException;
 use Lits\Exception\InvalidDataException;
 use Lits\Settings;
 use Safe\DateTimeImmutable;
-use Safe\Exceptions\PasswordException;
 use Throwable;
 
 use function Latitude\QueryBuilder\field;
-use function Safe\password_hash;
 
 final class UserData extends DatabaseData implements User
 {
     public ?int $id = null;
-    public string $username;
     public ?string $password = null;
     public ?string $name_first = null;
     public ?string $name_last = null;
@@ -32,13 +29,11 @@ final class UserData extends DatabaseData implements User
     public ?DateTime $expires = null;
 
     public function __construct(
-        string $username,
+        public string $username,
         Settings $settings,
-        Database $database
+        Database $database,
     ) {
         parent::__construct($settings, $database);
-
-        $this->username = $username;
     }
 
     /**
@@ -48,7 +43,7 @@ final class UserData extends DatabaseData implements User
     public static function fromRow(
         array $row,
         Settings $settings,
-        Database $database
+        Database $database,
     ): self {
         if (!isset($row['username'])) {
             throw new InvalidDataException('The username must be specified');
@@ -73,13 +68,13 @@ final class UserData extends DatabaseData implements User
     public static function fromId(
         int $id,
         Settings $settings,
-        Database $database
+        Database $database,
     ): ?self {
         $statement = $database->execute(
             $database->query
                 ->select()
                 ->from($database->prefix . 'user')
-                ->where(field('id')->eq($id))
+                ->where(field('id')->eq($id)),
         );
 
         /** @var array<string, string|null>|null $row */
@@ -99,7 +94,7 @@ final class UserData extends DatabaseData implements User
     public static function fromUsername(
         string $username,
         Settings $settings,
-        Database $database
+        Database $database,
     ): ?self {
         $ldap = new LdapConnector($settings);
 
@@ -111,7 +106,7 @@ final class UserData extends DatabaseData implements User
             $database->query
                 ->select()
                 ->from($database->prefix . 'user')
-                ->where(field('username')->eq($username))
+                ->where(field('username')->eq($username)),
         );
 
         /** @var array<string, string|null>|null $row */
@@ -133,11 +128,10 @@ final class UserData extends DatabaseData implements User
             throw new InvalidDataException(
                 'Could not determine current datetime',
                 0,
-                $exception
+                $exception,
             );
         }
 
-        /** @var string */
         return \hash(
             'sha256',
             (string) $this->id .
@@ -145,7 +139,7 @@ final class UserData extends DatabaseData implements User
             (\is_null($this->disabled) || $now < $this->disabled
                 ? 'enabled' : 'disabled') .
             (!\is_null($this->expires) && $now < $this->expires
-                ? $this->expires->format('Y-m-d') : 'expired')
+                ? $this->expires->format('Y-m-d') : 'expired'),
         );
     }
 
@@ -154,8 +148,8 @@ final class UserData extends DatabaseData implements User
         return (string) $this->id;
     }
 
-    /** @return int|string|int[]|string[] */
-    public function getAuthRole(?Context $context = null)
+    /** @return int|string|array<int>|array<string> */
+    public function getAuthRole(?Context $context = null): int|string|array
     {
         if ($context instanceof ContextData) {
             if (\is_int($this->id)) {
@@ -215,10 +209,7 @@ final class UserData extends DatabaseData implements User
         $this->id = $this->database->insert('user', $map);
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws PasswordException
-     */
+    /** @throws InvalidConfigException */
     public function setPassword(?string $password = null): void
     {
         $this->password = null;
@@ -227,7 +218,7 @@ final class UserData extends DatabaseData implements User
             return;
         }
 
-        $this->password = password_hash($password, \PASSWORD_DEFAULT);
+        $this->password = \password_hash($password, \PASSWORD_DEFAULT);
     }
 
     /**

@@ -13,11 +13,8 @@ use Slim\Routing\RouteContext;
 
 final class RouteAuthRequired implements AuthRequired
 {
-    private Settings $settings;
-
-    public function __construct(Settings $settings)
+    public function __construct(private Settings $settings)
     {
-        $this->settings = $settings;
     }
 
     private function requiredFromRequest(ServerRequest $request): ?string
@@ -37,8 +34,7 @@ final class RouteAuthRequired implements AuthRequired
         return $this->settings['auth']->required;
     }
 
-    /** @return string|bool|null */
-    public function __invoke(ServerRequest $request)
+    public function __invoke(ServerRequest $request): string|bool|null
     {
         $required = $this->requiredFromRequest($request);
 
