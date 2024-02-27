@@ -7,6 +7,7 @@ namespace Lits\Action;
 use InvalidArgumentException;
 use Jasny\Auth\Auth;
 use Lits\Action;
+use Lits\Config\AuthConfig;
 use Lits\Service\AuthActionService;
 use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Http\Response;
@@ -23,6 +24,31 @@ abstract class AuthAction extends Action
         $this->auth = $service->auth;
 
         $this->template->global('auth', $this->auth);
+    }
+
+    /** @throws HttpInternalServerErrorException */
+    protected function redirectLogin(
+        ?string $return = null,
+        ?int $status = null,
+    ): void {
+        \assert($this->settings['auth'] instanceof AuthConfig);
+
+        try {
+            $url = $this->settings['auth']->urlLogin(
+                $return ?? (string) $this->request->getUri()
+                    ->withScheme('')
+                    ->withHost('')
+                    ->withPort(null),
+            );
+        } catch (\Throwable $exception) {
+            throw new HttpInternalServerErrorException(
+                $this->request,
+                null,
+                $exception,
+            );
+        }
+
+        $this->redirect($url, $status);
     }
 
     /**
