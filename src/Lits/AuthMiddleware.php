@@ -75,15 +75,14 @@ final class AuthMiddleware extends JasnyAuthMiddleware
             try {
                 return $this->createResponse(302, $response)->withHeader(
                     'Location',
-                    \rtrim($this->config->url, '/') . '/login?return=' .
-                    \urlencode(
+                    $this->config->urlLogin(
                         (string) $request->getUri()
                             ->withScheme('')
                             ->withHost('')
                             ->withPort(null),
                     ),
                 );
-            } catch (\InvalidArgumentException $exception) {
+            } catch (\Throwable $exception) {
                 throw new HttpUnauthorizedException(
                     $request,
                     null,
