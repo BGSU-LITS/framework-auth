@@ -10,6 +10,7 @@ use Phoenix\Migration\AbstractMigration;
 final class CreateRoleTable extends AbstractMigration
 {
     /** @throws InvalidArgumentValueException */
+    #[\Override]
     protected function up(): void
     {
         $this->table('role', 'id')
@@ -21,6 +22,7 @@ final class CreateRoleTable extends AbstractMigration
         $this->insert('role', ['id' => 'super']);
     }
 
+    #[\Override]
     protected function down(): void
     {
         $this->table('role')->drop();

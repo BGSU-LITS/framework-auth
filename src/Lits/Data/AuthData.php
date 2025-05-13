@@ -16,12 +16,14 @@ use PDOException;
 
 final class AuthData extends DatabaseData implements Storage, TokenStorage
 {
+    #[\Override]
     public function getContextForUser(User $user): ?Context
     {
         return null;
     }
 
-    public function fetchContext(string $id): ?Context
+    #[\Override]
+    public function fetchContext(string $id): Context
     {
         return new ContextData($id, $this->settings, $this->database);
     }
@@ -30,6 +32,7 @@ final class AuthData extends DatabaseData implements Storage, TokenStorage
      * @return array{uid: string, expire: DateTime}
      * @throws InvalidDataException
      */
+    #[\Override]
     public function fetchToken(string $subject, string $token): ?array
     {
         $token = TokenData::fromSubjectToken(
@@ -50,6 +53,7 @@ final class AuthData extends DatabaseData implements Storage, TokenStorage
     }
 
     /** @throws InvalidDataException */
+    #[\Override]
     public function fetchUserById(string $id): ?UserData
     {
         return UserData::fromId(
@@ -63,6 +67,7 @@ final class AuthData extends DatabaseData implements Storage, TokenStorage
      * @throws InvalidConfigException
      * @throws InvalidDataException
      */
+    #[\Override]
     public function fetchUserByUsername(string $username): ?UserData
     {
         return UserData::fromUsername(
@@ -76,6 +81,7 @@ final class AuthData extends DatabaseData implements Storage, TokenStorage
      * @throws DuplicateInsertException
      * @throws PDOException
      */
+    #[\Override]
     public function saveToken(
         string $subject,
         string $token,

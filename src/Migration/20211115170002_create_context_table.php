@@ -11,6 +11,7 @@ use Phoenix\Migration\AbstractMigration;
 final class CreateContextTable extends AbstractMigration
 {
     /** @throws InvalidArgumentValueException */
+    #[\Override]
     protected function up(): void
     {
         $this->table('context', ['user_id', 'context'])
@@ -22,6 +23,7 @@ final class CreateContextTable extends AbstractMigration
             ->create();
     }
 
+    #[\Override]
     protected function down(): void
     {
         $this->table('context')->drop();

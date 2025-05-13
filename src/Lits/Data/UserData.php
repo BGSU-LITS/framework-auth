@@ -120,6 +120,7 @@ final class UserData extends DatabaseData implements User
     }
 
     /** @throws InvalidDataException */
+    #[\Override]
     public function getAuthChecksum(): string
     {
         try {
@@ -143,13 +144,14 @@ final class UserData extends DatabaseData implements User
         );
     }
 
+    #[\Override]
     public function getAuthId(): string
     {
         return (string) $this->id;
     }
 
-    /** @return int|string|array<int>|array<string> */
-    public function getAuthRole(?Context $context = null): int|string|array
+    #[\Override]
+    public function getAuthRole(?Context $context = null): string
     {
         if ($context instanceof ContextData) {
             if (\is_int($this->id)) {
@@ -176,6 +178,7 @@ final class UserData extends DatabaseData implements User
         $this->database->delete('user', ['id' => $this->id]);
     }
 
+    #[\Override]
     public function requiresMfa(): bool
     {
         return false;
@@ -225,6 +228,7 @@ final class UserData extends DatabaseData implements User
      * @throws InvalidConfigException
      * @throws InvalidDataException
      */
+    #[\Override]
     public function verifyPassword(string $password): bool
     {
         $ldap = new LdapConnector($this->settings);

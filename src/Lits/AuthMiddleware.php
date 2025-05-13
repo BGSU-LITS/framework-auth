@@ -34,6 +34,7 @@ final class AuthMiddleware extends JasnyAuthMiddleware
         return $copy;
     }
 
+    #[\Override]
     protected function initialize(ServerRequest $request): void
     {
         parent::initialize($request);
@@ -50,6 +51,7 @@ final class AuthMiddleware extends JasnyAuthMiddleware
      * @throws HttpForbiddenException
      * @throws HttpUnauthorizedException
      */
+    #[\Override]
     protected function forbidden(
         ServerRequest $request,
         ?Response $response = null,

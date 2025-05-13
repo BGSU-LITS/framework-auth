@@ -11,6 +11,7 @@ use Phoenix\Migration\AbstractMigration;
 final class CreateTokenTable extends AbstractMigration
 {
     /** @throws InvalidArgumentValueException */
+    #[\Override]
     protected function up(): void
     {
         $this->table('token', ['user_id', 'subject'])
@@ -22,6 +23,7 @@ final class CreateTokenTable extends AbstractMigration
             ->create();
     }
 
+    #[\Override]
     protected function down(): void
     {
         $this->table('token')->drop();

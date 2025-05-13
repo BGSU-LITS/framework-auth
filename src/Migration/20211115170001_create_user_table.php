@@ -12,6 +12,7 @@ use Phoenix\Migration\AbstractMigration;
 final class CreateUserTable extends AbstractMigration
 {
     /** @throws InvalidArgumentValueException */
+    #[\Override]
     protected function up(): void
     {
         $this->table('user')
@@ -36,6 +37,7 @@ final class CreateUserTable extends AbstractMigration
             ->create();
     }
 
+    #[\Override]
     protected function down(): void
     {
         $this->table('user')->drop();

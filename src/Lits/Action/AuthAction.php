@@ -55,6 +55,7 @@ abstract class AuthAction extends Action
      * @param array<string, string> $data
      * @throws HttpInternalServerErrorException
      */
+    #[\Override]
     protected function setup(
         ServerRequest $request,
         Response $response,

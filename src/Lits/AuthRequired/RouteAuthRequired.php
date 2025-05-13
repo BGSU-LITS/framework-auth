@@ -34,6 +34,7 @@ final class RouteAuthRequired implements AuthRequired
         return $this->settings['auth']->required;
     }
 
+    #[\Override]
     public function __invoke(ServerRequest $request): string|bool|null
     {
         $required = $this->requiredFromRequest($request);

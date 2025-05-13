@@ -69,6 +69,7 @@ final class ContextData extends DatabaseData implements ContextInterface
         }
     }
 
+    #[\Override]
     public function getAuthId(): ?string
     {
         return null;
